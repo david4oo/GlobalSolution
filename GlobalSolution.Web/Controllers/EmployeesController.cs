@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using GlobalSolution.Web.Data;
 using GlobalSolution.Web.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
+using GlobalSolution.Web.Models;
+using GlobalSolution.Web.Helpers;
 
 namespace GlobalSolution.Web.Controllers
 {
@@ -16,12 +18,15 @@ namespace GlobalSolution.Web.Controllers
     public class EmployeesController : Controller
     {
         private readonly DataContext _dataContext;
+        private readonly IUserHelper _userHelper;
 
-        public EmployeesController(DataContext dataContext)
+        public EmployeesController(
+            DataContext dataContext,
+            IUserHelper userHelper)
         {
             _dataContext = dataContext;
+            _userHelper = userHelper;
         }
-
 
 
 
@@ -36,14 +41,6 @@ namespace GlobalSolution.Web.Controllers
 
 
 
-
-
-
-
-
-
-
-        // GET: Employees/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -52,7 +49,14 @@ namespace GlobalSolution.Web.Controllers
             }
 
             var employee = await _dataContext.Employees
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(e => e.User)
+                .Include(e => e.Vehicles)
+                .ThenInclude(v => v.VehiclePhotos)
+                .Include(e => e.Orders)
+                .ThenInclude(o => o.Customer)
+                .ThenInclude(c => c.User)
+
+                .FirstOrDefaultAsync(e => e.Id == id);
             if (employee == null)
             {
                 return NotFound();
@@ -63,33 +67,90 @@ namespace GlobalSolution.Web.Controllers
 
 
 
-
-
-
-
-
-
-        // GET: Employees/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Employees/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] Employee employee)
+        public async Task<IActionResult> Create(AddUserViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _dataContext.Add(employee);
-                await _dataContext.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var user = await CreateUserAsync(model);
+                if (user != null)
+                {
+                    var employee = new Employee
+                    {
+                        Orders = new List<Order>(),
+                        Vehicles = new List<Vehicle>(),
+                        User = user
+
+                    };
+
+                    _dataContext.Employees.Add(employee);
+                    await _dataContext.SaveChangesAsync();
+                    return RedirectToAction("Index");
+                }
+                ModelState.AddModelError(string.Empty, "User with this email already exist!!");
             }
-            return View(employee);
+            return View(model);
         }
+
+        private async Task<User> CreateUserAsync(AddUserViewModel model)
+        {
+            var user = new User
+            {
+                Address = model.Address,
+                Document = model.Document,
+                Email = model.Username,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                PhoneNumber = model.PhoneNumber,
+                UserName = model.Username
+
+            };
+
+            var result = await _userHelper.AddUserAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                user = await _userHelper.GetUserByEmailAsync(model.Username);
+                await _userHelper.AddUserToRoleAsync(user, "Employee");
+                return user;
+            }
+            return null;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // GET: Employees/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -106,35 +167,6 @@ namespace GlobalSolution.Web.Controllers
             }
             return View(employee);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -173,6 +205,20 @@ namespace GlobalSolution.Web.Controllers
             }
             return View(employee);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
