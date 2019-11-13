@@ -1,0 +1,66 @@
+﻿@model GlobalSolution.Web.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<center>
+    <h1>Login</h1>
+</center>
+
+<div class="row">
+    <div class="col-md-4 offset-md-5">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly"></div>
+            <table border="0">
+                <thead>
+                    <tr>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td align="center">
+                            <div class="form-group">
+                                <label asp-for="Username">Username</label>
+                                <input asp-for="Username" class="form-control" />
+                                <span asp-validation-for="Username" class="text-warning"></span>
+                            </div>
+                            <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            <div class="form-group">
+                                <label asp-for="Password">Password</label>
+                                <input asp-for="Password" type="password" class="form-control" />
+                                <span asp-validation-for="Password" class="text-warning"></span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input asp-for="RememberMe" type="checkbox" class="form-check-input" />
+                                    <label asp-for="RememberMe" class="form-check-label">Remember Me?</label>
+                                </div>
+                                <span asp-validation-for="RememberMe" class="text-warning"></span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            <div class="form-group">
+                                <a><input type="submit" value="Login" class="btn btn-success" /></a>
+                                <a asp-action="Register" class="btn btn-primary">Register New User</a>
+                            </div>
+                        </td>
+                    </tr>
+                <tbody>
+            </table>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

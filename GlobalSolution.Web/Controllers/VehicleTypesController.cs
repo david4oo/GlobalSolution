@@ -7,43 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GlobalSolution.Web.Data;
 using GlobalSolution.Web.Data.Entities;
-using Microsoft.AspNetCore.Authorization;
 
 namespace GlobalSolution.Web.Controllers
 {
-
-    [Authorize(Roles = "Manager")]
-    public class EmployeesController : Controller
+    public class VehicleTypesController : Controller
     {
-        private readonly DataContext _dataContext;
+        private readonly DataContext _context;
 
-        public EmployeesController(DataContext dataContext)
+        public VehicleTypesController(DataContext context)
         {
-            _dataContext = dataContext;
+            _context = context;
         }
 
-
-
-
-
-        public IActionResult Index()
+        // GET: VehicleTypes
+        public async Task<IActionResult> Index()
         {
-            return View(_dataContext.Employees
-                .Include(e => e.User)
-                .Include(e => e.Vehicles)
-                .Include(e => e.Orders));
+            return View(await _context.VehicleTypes.ToListAsync());
         }
 
-
-
-
-
-
-
-
-
-
-        // GET: Employees/Details/5
+        // GET: VehicleTypes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -51,47 +33,39 @@ namespace GlobalSolution.Web.Controllers
                 return NotFound();
             }
 
-            var employee = await _dataContext.Employees
+            var vehicleType = await _context.VehicleTypes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (employee == null)
+            if (vehicleType == null)
             {
                 return NotFound();
             }
 
-            return View(employee);
+            return View(vehicleType);
         }
 
-
-
-
-
-
-
-
-
-        // GET: Employees/Create
+        // GET: VehicleTypes/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Employees/Create
+        // POST: VehicleTypes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] Employee employee)
+        public async Task<IActionResult> Create([Bind("Id,Name")] VehicleType vehicleType)
         {
             if (ModelState.IsValid)
             {
-                _dataContext.Add(employee);
-                await _dataContext.SaveChangesAsync();
+                _context.Add(vehicleType);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+            return View(vehicleType);
         }
 
-        // GET: Employees/Edit/5
+        // GET: VehicleTypes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -99,54 +73,22 @@ namespace GlobalSolution.Web.Controllers
                 return NotFound();
             }
 
-            var employee = await _dataContext.Employees.FindAsync(id);
-            if (employee == null)
+            var vehicleType = await _context.VehicleTypes.FindAsync(id);
+            if (vehicleType == null)
             {
                 return NotFound();
             }
-            return View(employee);
+            return View(vehicleType);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // POST: Employees/Edit/5
+        // POST: VehicleTypes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] VehicleType vehicleType)
         {
-            if (id != employee.Id)
+            if (id != vehicleType.Id)
             {
                 return NotFound();
             }
@@ -155,12 +97,12 @@ namespace GlobalSolution.Web.Controllers
             {
                 try
                 {
-                    _dataContext.Update(employee);
-                    await _dataContext.SaveChangesAsync();
+                    _context.Update(vehicleType);
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeExists(employee.Id))
+                    if (!VehicleTypeExists(vehicleType.Id))
                     {
                         return NotFound();
                     }
@@ -171,13 +113,10 @@ namespace GlobalSolution.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+            return View(vehicleType);
         }
 
-
-
-
-        // GET: Employees/Delete/5
+        // GET: VehicleTypes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -185,30 +124,30 @@ namespace GlobalSolution.Web.Controllers
                 return NotFound();
             }
 
-            var employee = await _dataContext.Employees
+            var vehicleType = await _context.VehicleTypes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (employee == null)
+            if (vehicleType == null)
             {
                 return NotFound();
             }
 
-            return View(employee);
+            return View(vehicleType);
         }
 
-        // POST: Employees/Delete/5
+        // POST: VehicleTypes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var employee = await _dataContext.Employees.FindAsync(id);
-            _dataContext.Employees.Remove(employee);
-            await _dataContext.SaveChangesAsync();
+            var vehicleType = await _context.VehicleTypes.FindAsync(id);
+            _context.VehicleTypes.Remove(vehicleType);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EmployeeExists(int id)
+        private bool VehicleTypeExists(int id)
         {
-            return _dataContext.Employees.Any(e => e.Id == id);
+            return _context.VehicleTypes.Any(e => e.Id == id);
         }
     }
 }

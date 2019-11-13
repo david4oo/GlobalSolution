@@ -1,0 +1,21 @@
+﻿@model GlobalSolution.Web.Data.Entities.JobType
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<center>
+    <h2> Detail Job</h2>
+</center>
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.Name)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Name)
+    </dd>
+</dl>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Edit</a>
+    <a asp-action="Index" class="btn btn-primary">Back</a>
+</div>
