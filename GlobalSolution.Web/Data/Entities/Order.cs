@@ -42,6 +42,8 @@ namespace GlobalSolution.Web.Data.Entities
 
         public Employee Employee { get; set; }
 
+        public Customer Customer { get; set; }
+
         public JobType JobType { get; set; }
 
     }
