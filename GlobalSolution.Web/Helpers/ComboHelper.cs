@@ -19,6 +19,12 @@ namespace GlobalSolution.Web.Helpers
 
 
 
+
+
+
+
+
+
         public IEnumerable<SelectListItem> GetComboVehicleTypes()
         {
 

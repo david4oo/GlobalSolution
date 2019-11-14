@@ -10,7 +10,6 @@ namespace GlobalSolution.Web.Helpers
         VehicleViewModel ToVehicleViewModel(Vehicle vehicle);
 
         Task<Order> ToOrderAsync(OrderViewModel model, bool isNew);
-
-
+        OrderViewModel ToOrderViewModel(Order order);
     }
 }

@@ -40,9 +40,27 @@ namespace GlobalSolution.Web.Helpers
 
         }
 
-
-
-
+        public OrderViewModel ToOrderViewModel(Order order)
+        {
+            return new OrderViewModel
+            {
+                Employee = order.Employee,
+                Customer = order.Customer,
+                JobType = order.JobType,
+                Vehicle = order.Vehicle,
+                Garantia = order.Garantia,
+                Trabajo = order.Trabajo,
+                Price = order.Price,
+                EntryDate1 = order.EntryDate1Local,
+                Description = order.Description,
+                Id =  order.Id,
+                CustomerId = order.Customer.Id,
+                Customers = _comboHelper.GetComboCustomers(),
+                EmployeeId = order.Employee.Id,
+                VehicleId = order.Vehicle.Id,
+                JobTypeId = order.JobType.Id
+            };
+        }
 
 
 

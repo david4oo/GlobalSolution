@@ -369,6 +369,97 @@ namespace GlobalSolution.Web.Controllers
         ////////////////////////////////////////////////////
 
 
+        public async Task<IActionResult> EditOrder(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var order = await _dataContext.Orders
+                .Include(v => v.Employee)
+                .Include(v => v.Customer)
+                .Include(v => v.Vehicle)
+                .Include(v => v.JobType)
+                .FirstOrDefaultAsync(v => v.Id == id.Value);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+         
+            return View(_converterHelper.ToOrderViewModel(order));
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> EditOrder(OrderViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var order = await _converterHelper.ToOrderAsync(model, false);
+                _dataContext.Orders.Update(order);
+                await _dataContext.SaveChangesAsync();
+                return RedirectToAction(($"{nameof(DetailsVehicle)}/{model.VehicleId}"));
+            }
+            return View(model);
+        }
+
+
+
+
+
+
+
+
+        ///////////////////////////////////////////////////
+
+
+
+
+        public async Task<IActionResult> AddOrder(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vehicle = await _dataContext.Vehicles
+                .Include(e => e.Employee)
+                .FirstOrDefaultAsync(v => v.Id == id.Value);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+
+            var model = new OrderViewModel
+            {
+                EmployeeId = vehicle.Employee.Id,
+                VehicleId = vehicle.Id,
+                Customers = _comboHelper.GetComboCustomers(),
+                JobTypes = _comboHelper.GetComboJobTypes(),
+                Price = vehicle.Price,
+
+            };
+
+            return View(model);
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddOrder(OrderViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var order = await _converterHelper.ToOrderAsync(model, true);
+                _dataContext.Orders.Add(order);
+                await _dataContext.SaveChangesAsync();
+                return RedirectToAction(($"{nameof(DetailsVehicle)}/{model.VehicleId}"));
+            }
+            return View(model);
+        }
 
 
 
@@ -384,6 +475,8 @@ namespace GlobalSolution.Web.Controllers
 
 
 
+
+        //////////////////////////////////////////////////////////////////////////
 
         // GET: Employees/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -429,51 +522,7 @@ namespace GlobalSolution.Web.Controllers
 
 
 
-        public async Task<IActionResult> AddOrder(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vehicle = await _dataContext.Vehicles
-                .Include(e => e.Employee)
-                .FirstOrDefaultAsync(v => v.Id == id.Value);
-            if (vehicle == null)
-            {
-                return NotFound();
-            }
-
-            var model = new OrderViewModel
-            {
-                EmployeeId = vehicle.Employee.Id,
-                VehicleId = vehicle.Id,           
-                Customers = _comboHelper.GetComboCustomers(),
-                JobTypes = _comboHelper.GetComboJobTypes(),
-                Price = vehicle.Price,
-
-            };
-
-            return View(model);
-        }
-
-
-
-        [HttpPost]
-        public async Task<IActionResult> AddOrder(OrderViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var order = await _converterHelper.ToOrderAsync(model, true);
-                _dataContext.Orders.Add(order);
-                await _dataContext.SaveChangesAsync();
-                return RedirectToAction($"DetailsVehicle/{model.EmployeeId}");
-            }
-            return View(model);
-        }
-
-
-
+     
 
 
 
