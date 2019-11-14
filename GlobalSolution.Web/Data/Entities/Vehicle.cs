@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GlobalSolution.Web.Data.Entities
 {
@@ -25,6 +22,12 @@ namespace GlobalSolution.Web.Data.Entities
         [Display(Name = "Color")]
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         public string Color { get; set; }
+
+
+        [Display(Name = "Price")]
+        [Required(ErrorMessage = "The field {0} is mandatory.")]
+        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
+        public decimal Price { get; set; }
 
 
         public VehicleType VehicleType { get; set; }

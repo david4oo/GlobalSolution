@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GlobalSolution.Web.Data;
+using GlobalSolution.Web.Data.Entities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using GlobalSolution.Web.Data;
-using GlobalSolution.Web.Data.Entities;
 
 namespace GlobalSolution.Web.Controllers
 {

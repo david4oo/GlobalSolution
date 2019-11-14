@@ -1,5 +1,3 @@
-using System;
-
 namespace GlobalSolution.Web.Models
 {
     public class ErrorViewModel

@@ -1,15 +1,13 @@
-﻿using System;
+﻿using GlobalSolution.Web.Data;
+using GlobalSolution.Web.Data.Entities;
+using GlobalSolution.Web.Helpers;
+using GlobalSolution.Web.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using GlobalSolution.Web.Data;
-using GlobalSolution.Web.Data.Entities;
-using Microsoft.AspNetCore.Authorization;
-using GlobalSolution.Web.Models;
-using GlobalSolution.Web.Helpers;
 
 namespace GlobalSolution.Web.Controllers
 {
@@ -19,12 +17,22 @@ namespace GlobalSolution.Web.Controllers
     {
         private readonly DataContext _dataContext;
         private readonly IUserHelper _userHelper;
+        private readonly IComboHelper _comboHelper;
+        private readonly IConverterHelper _converterHelper;
+        private readonly IImageHelper _imageHelper;
 
         public EmployeesController(
             DataContext dataContext,
-            IUserHelper userHelper)
+            IUserHelper userHelper,
+            IComboHelper comboHelper,
+            IConverterHelper converterHelper,
+            IImageHelper imageHelper)
+
         {
             _dataContext = dataContext;
+            _comboHelper = comboHelper;
+            _converterHelper = converterHelper;
+            _imageHelper = imageHelper;
             _userHelper = userHelper;
         }
 
@@ -41,32 +49,9 @@ namespace GlobalSolution.Web.Controllers
 
 
 
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var employee = await _dataContext.Employees
-                .Include(e => e.User)
-                .Include(e => e.Vehicles)
-                .ThenInclude(v => v.VehiclePhotos)
-                .Include(e => e.Orders)
-                .ThenInclude(o => o.Customer)
-                .ThenInclude(c => c.User)
-
-                .FirstOrDefaultAsync(e => e.Id == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            return View(employee);
-        }
 
 
-
+        ////CREAR NUEVO EMPLEADO
         public IActionResult Create()
         {
             return View();
@@ -124,6 +109,30 @@ namespace GlobalSolution.Web.Controllers
         }
 
 
+        ///DETALLES DE EMPLEADO
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var employee = await _dataContext.Employees
+                .Include(e => e.User)
+                .Include(e => e.Vehicles)
+                .ThenInclude(v => v.VehiclePhotos)
+                .Include(e => e.Orders)
+                .ThenInclude(o => o.Customer)
+                .ThenInclude(c => c.User)
+
+                .FirstOrDefaultAsync(e => e.Id == id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            return View(employee);
+        }
 
 
 
@@ -133,27 +142,188 @@ namespace GlobalSolution.Web.Controllers
 
 
 
+        public async Task<IActionResult> EditVehicle(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vehicle = await _dataContext.Vehicles
+
+               .Include(v => v.Employee)
+               .Include(v => v.VehicleType)
+               .FirstOrDefaultAsync(v => v.Id == id);
+
+
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+
+            var model = _converterHelper.ToVehicleViewModel(vehicle);
+
+            return View(model);
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> EditVehicle(VehicleViewModel model)
+        {
+
+
+
+            if (ModelState.IsValid)
+            {
+                var vehicle = await _converterHelper.ToVehicleAsync(model, false);
+                _dataContext.Vehicles.Update(vehicle);
+                await _dataContext.SaveChangesAsync();
+
+                return RedirectToAction($"Details/{model.EmployeeId}");
+            }
+
+            return View(model);
+        }
+
+
+        public async Task<IActionResult> DetailsVehicle(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vehicle = await _dataContext.Vehicles
+                .Include(e => e.Employee)
+                .ThenInclude(e => e.User)
+                .Include(e => e.Orders)
+                .ThenInclude(or => or.Customer)
+                .ThenInclude(c => c.User)
+                .Include(e => e.VehicleType)
+                .Include(v => v.VehiclePhotos)
+                .FirstOrDefaultAsync(e => e.Id == id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+
+            return View(vehicle);
+        }
+
+
+
+        public async Task<IActionResult> AddImage(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vehicle = await _dataContext.Vehicles.FindAsync(id.Value);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+
+            var model = new VehiclePhotoViewModel
+            {
+                Id = vehicle.Id
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddImage(VehiclePhotoViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var path = string.Empty;
+
+                if (model.ImageFile != null)
+                {
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile);
+                }
+
+                var vehiclePhoto = new VehiclePhoto
+                {
+                    ImageUrl = path,
+                    Vehicle = await _dataContext.Vehicles.FindAsync(model.Id)
+                };
+
+                _dataContext.VehiclePhotos.Add(vehiclePhoto);
+                await _dataContext.SaveChangesAsync();
+                return RedirectToAction($"{nameof(DetailsVehicle)}/{model.Id}");
+            }
+
+            return View(model);
+        }
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // GET: Employees/Edit/5
         public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var employee = await _dataContext.Employees
+                .Include(e => e.User)
+                .FirstOrDefaultAsync(e => e.Id == id.Value);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            var model = new EditUserViewModel
+            {
+                Address = employee.User.Address,
+                Document = employee.User.Document,
+                FirstName = employee.User.FirstName,
+                Id = employee.Id,
+                LastName = employee.User.LastName,
+                PhoneNumber = employee.User.PhoneNumber
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var employee = await _dataContext.Employees
+                    .Include(o => o.User)
+                    .FirstOrDefaultAsync(o => o.Id == model.Id);
+
+                employee.User.Document = model.Document;
+                employee.User.FirstName = model.FirstName;
+                employee.User.LastName = model.LastName;
+                employee.User.Address = model.Address;
+                employee.User.PhoneNumber = model.PhoneNumber;
+
+                await _userHelper.UpdateUserAsync(employee.User);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(model);
+        }
+
+
+
+
+
+
+
+
+        ///AGREGAR VEHICULO
+        public async Task<IActionResult> AddVehicle(int? id)
         {
             if (id == null)
             {
@@ -165,46 +335,38 @@ namespace GlobalSolution.Web.Controllers
             {
                 return NotFound();
             }
-            return View(employee);
+
+            var model = new VehicleViewModel
+            {
+                EmployeeId = employee.Id,
+                VehicleTypes = _comboHelper.GetComboVehicleTypes()
+
+            };
+            return View(model);
         }
 
 
 
-
-        // POST: Employees/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] Employee employee)
+        public async Task<IActionResult> AddVehicle(VehicleViewModel model)
         {
-            if (id != employee.Id)
-            {
-                return NotFound();
-            }
+
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _dataContext.Update(employee);
-                    await _dataContext.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmployeeExists(employee.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                var vehicle = await _converterHelper.ToVehicleAsync(model, true);
+                _dataContext.Vehicles.Add(vehicle);
+                await _dataContext.SaveChangesAsync();
+
+                return RedirectToAction($"Details/{model.EmployeeId}");
             }
-            return View(employee);
+
+            return View(model);
         }
+
+
+
+        ////////////////////////////////////////////////////
 
 
 
@@ -241,6 +403,12 @@ namespace GlobalSolution.Web.Controllers
             return View(employee);
         }
 
+
+
+
+
+
+
         // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -256,5 +424,134 @@ namespace GlobalSolution.Web.Controllers
         {
             return _dataContext.Employees.Any(e => e.Id == id);
         }
+
+
+
+
+
+        public async Task<IActionResult> AddOrder(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vehicle = await _dataContext.Vehicles
+                .Include(e => e.Employee)
+                .FirstOrDefaultAsync(v => v.Id == id.Value);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+
+            var model = new OrderViewModel
+            {
+                EmployeeId = vehicle.Employee.Id,
+                VehicleId = vehicle.Id,           
+                Customers = _comboHelper.GetComboCustomers(),
+                JobTypes = _comboHelper.GetComboJobTypes(),
+                Price = vehicle.Price,
+
+            };
+
+            return View(model);
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddOrder(OrderViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var order = await _converterHelper.ToOrderAsync(model, true);
+                _dataContext.Orders.Add(order);
+                await _dataContext.SaveChangesAsync();
+                return RedirectToAction($"DetailsVehicle/{model.EmployeeId}");
+            }
+            return View(model);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
+
+
+
+
+
+

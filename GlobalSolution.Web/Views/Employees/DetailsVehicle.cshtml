@@ -1,0 +1,248 @@
+﻿@model GlobalSolution.Web.Data.Entities.Vehicle
+
+
+@{
+    ViewData["Title"] = "DetailsVehicle";
+}
+
+<h2>DetailsVehicle</h2>
+<div class="row">
+    <div class="col-md-3">
+        <div>
+            @if (Model.VehiclePhotos.Count == 0)
+            {
+                <h4>Images</h4>
+                <h6>Not images added yet.</h6>
+            }
+            else
+            {
+                <table class="table" border="3" align="left">
+                    <thead>
+                        <tr>
+                            <th>
+
+                                <h4>Images About Vehicle</h4>
+                                @Html.DisplayNameFor(model => model.VehiclePhotos.FirstOrDefault().ImageUrl)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.VehiclePhotos)
+                        {
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                    {
+                                        <img src="@Url.Content(item.ImageUrl)" alt="Image" style="width:200px;height:200px;max-width: 100%; height: auto;" />
+                                    }
+                                </td>
+                                <td>
+                                    <button data-id="@item.Id" class="btn btn-danger deleteImage" data-toggle="modal" data-target="#deleteDialog"><i class="glyphicon glyphicon-trash"></i></button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+    <d1 class="row">
+        <div class="col-md-2">
+            <table border="3" align="center">
+                <thead>
+                    <tr>
+                        <td align="center">
+                            <center>
+                                <h4>Responsible Employee</h4>
+                            </center>
+                        </td>
+                        <td align="center">
+                            <center>
+                                <h4>Vehicle Serviced</h4>
+                            </center>
+                        </td>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <tr>
+                        <td align="center">
+                            <div>
+                                <dl class="dl-horizontal">
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.Employee.User.Document)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.Employee.User.Document)
+                                    </dd>
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.Employee.User.FirstName)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.Employee.User.FirstName)
+                                    </dd>
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.Employee.User.LastName)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.Employee.User.LastName)
+                                    </dd>
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.Employee.User.Email)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.Employee.User.Email)
+                                    </dd>
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.Employee.User.Address)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.Employee.User.Address)
+                                    </dd>
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.Employee.User.PhoneNumber)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.Employee.User.PhoneNumber)
+                                    </dd>
+                                </dl>
+                            </div>
+
+                        </td>
+
+                        <td align="center">
+                            <div class="col-md-5">
+                                <div>
+                                    <dl class="dl-horizontal">
+                                        <dt>
+                                            @Html.DisplayNameFor(model => model.Placa)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Placa)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => model.Modelo)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Modelo)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => model.Color)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Color)
+                                        </dd>
+                                        <dt>
+                                            Orders
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Orders.Count)
+                                        </dd>
+                                        <dt>
+                                            Vehicle Type
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.VehicleType.Name)
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-8">
+            <div>
+
+                <center>
+                    <h4>Orders</h4>
+                </center>
+            </div>
+
+            <div>
+                @if (Model.Orders.Count == 0)
+                {
+                    <center>
+                        <h6>Not Orders added yet.</h6>
+                    </center>
+                }
+                else
+                {
+                    <table class="table" border="3">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Customer
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().Price)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().Garantia)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().EntryDate1)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().Trabajo)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().Description)
+                                </th>
+                                <th>
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Orders)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Customer.User.FullNameWithDocument)
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Price)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Garantia)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EntryDate1)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Trabajo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a asp-action="EditOrder" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                                            <a asp-action="detailsOrder" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                                            <a asp-action="DeleteOrder" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+</div>
+
+<p></p>
+<center>
+    <div>
+        <a asp-action="EditVehicle" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+        <a asp-action="AddImage" asp-route-id="@Model.Id" class="btn btn-default">Add Image</a>
+        <a asp-action="AddOrder" asp-route-id="@Model.Id" class="btn btn-default">Add Order</a>
+        <a asp-action="Details" asp-route-id="@Model.Employee.Id" class="btn btn-primary">Back</a>
+    </div>
+</center>
+

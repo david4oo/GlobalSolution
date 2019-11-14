@@ -1,7 +1,6 @@
 ﻿using GlobalSolution.Web.Data.Entities;
 using GlobalSolution.Web.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,11 +27,13 @@ namespace GlobalSolution.Web.Data
             var manager = await CheckUserAsync("1128462788", "Walter", "Araujo", "walter-4029@hotmail.com", "3166699037", "Calle 69 #40-29", "Manager");
             var employee = await CheckUserAsync("1128462799", "Wally", "Muñoz", "waraujo095@gmail.com", "3168440133", "Av Poblado", "Employee");
             var customer1 = await CheckUserAsync("1128462777", "David", "Lopez", "david.4029@hotmail.com", "3122127180", "Calle 110a #30-24", "Customer");
-            var customer2 = await CheckUserAsync("1128462666", "Pedro", "Mora", "pepitoflz3020@gmail.com", "3206987851", "Calle 1 Av Aguacatala", "Customer");
+
+
+
             await CheckManagerAsync(manager);
             await CheckEmployeesAsync(employee);
             await CheckCustomersAsync(customer1);
-            await CheckCustomersAsync(customer2);
+
 
 
 
@@ -42,8 +43,15 @@ namespace GlobalSolution.Web.Data
 
 
             await CheckVehiclesAsync();
-            await CheckOrdersAsync();
-        }
+            await CheckOrderAsync();
+
+
+
+
+
+            }
+
+
 
 
         ////////////////////////////////////////////////////////////////
@@ -197,35 +205,51 @@ namespace GlobalSolution.Web.Data
 
 
 
-
-
-        private async Task CheckOrdersAsync()
+        private async Task CheckOrderAsync()
         {
-            var employee = _context.Employees.FirstOrDefault();
+            var employee= _context.Employees.FirstOrDefault();
             var customer = _context.Customers.FirstOrDefault();
-            var jobtype = _context.JobTypes.FirstOrDefault();
             var vehicle = _context.Vehicles.FirstOrDefault();
-
+            var jobtype = _context.JobTypes.FirstOrDefault();
             if (!_context.Orders.Any())
             {
                 _context.Orders.Add(new Order
                 {
                     EntryDate1 = DateTime.Today,
-                    Vehicle = vehicle,
-                    Employee = employee,       
                     Customer = customer,
-                    JobType = jobtype,
-                    Price = 582000M,
-                    Garantia = "6 Meses",
+                    Employee = employee,
+                    Price = 800000M,
+                    Vehicle = vehicle,
+                    JobType  = jobtype,
                     Trabajo = "15 Dias",
-                    Description = "El Vehiculo Presenta Una desalineacion del arbol de levas y Fuselaje mayor"
-
-
+                    Garantia = "5 meses",                
+                    Description = "Fuselaje Mayor Dañado"
                 });
 
                 await _context.SaveChangesAsync();
             }
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
- }
+}
+
