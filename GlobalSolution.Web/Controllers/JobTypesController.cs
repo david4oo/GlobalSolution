@@ -113,7 +113,8 @@ namespace GlobalSolution.Web.Controllers
             return View(jobType);
         }
 
-        // GET: JobTypes/Delete/5
+
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -122,25 +123,30 @@ namespace GlobalSolution.Web.Controllers
             }
 
             var jobType = await _context.JobTypes
+                .Include(jt=>jt.Orders)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (jobType == null)
             {
                 return NotFound();
             }
 
-            return View(jobType);
-        }
+            if (jobType.Orders.Count>0)
+            {
+                //TODO: message
+                return RedirectToAction(nameof(Index));
+            }
 
-        // POST: JobTypes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var jobType = await _context.JobTypes.FindAsync(id);
+
             _context.JobTypes.Remove(jobType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+
+
+
+
 
         private bool JobTypeExists(int id)
         {

@@ -113,7 +113,11 @@ namespace GlobalSolution.Web.Controllers
             return View(vehicleType);
         }
 
-        // GET: VehicleTypes/Delete/5
+
+
+
+
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -122,25 +126,31 @@ namespace GlobalSolution.Web.Controllers
             }
 
             var vehicleType = await _context.VehicleTypes
+                .Include(vt => vt.Vehicles)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (vehicleType == null)
             {
                 return NotFound();
             }
 
-            return View(vehicleType);
-        }
+            if (vehicleType.Vehicles.Count>0)
+            {
+                //TODO: message
+                return RedirectToAction(nameof(Index));
+            }
 
-        // POST: VehicleTypes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var vehicleType = await _context.VehicleTypes.FindAsync(id);
+
             _context.VehicleTypes.Remove(vehicleType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+
+
+
+
+
 
         private bool VehicleTypeExists(int id)
         {
