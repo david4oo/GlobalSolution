@@ -1,0 +1,90 @@
+﻿@model GlobalSolution.Web.Data.Entities.Order
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<center>
+    <h2>Details Order</h2>
+</center>
+
+<table class="table" border="3">
+    <thead>
+        <tr>
+            <th align="justify">
+                <dl class="dl-horizontal">
+                    <dt>
+                        Employee
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Employee.User.FullNameWithDocument)
+                    </dd>
+                    <dt>
+                        Customer
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Customer.User.FullNameWithDocument)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Vehicle.VehicleType.Name)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Vehicle.VehicleType.Name)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Vehicle.Placa)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Vehicle.Placa)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Vehicle.Modelo)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Vehicle.Modelo)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Vehicle.Color)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Vehicle.Color)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Price)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Price)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Garantia)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Garantia)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Trabajo)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Trabajo)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Description)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EntryDate1)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.EntryDate1)
+                    </dd>
+                </dl>
+                <div>
+                    <a asp-action="EditOrder" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="DetailsVehicle" asp-route-id="@Model.Vehicle.Id" class="btn btn-primary">Back</a>
+                </div>
+            </th>
+        </tr>
+    </thead>
+</table>

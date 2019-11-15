@@ -445,7 +445,56 @@ namespace GlobalSolution.Web.Controllers
             return View(model);
         }
 
+
         ///////////////////////////////////////////////////////////////////////
+
+
+
+        public async Task<IActionResult> DetailsOrder(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var order = await _dataContext.Orders
+                .Include(o => o.Employee)
+                .ThenInclude(e => e.User)
+                .Include(o => o.Customer )
+                .ThenInclude(e => e.User)
+                .Include(o => o.Vehicle)
+                .ThenInclude(v => v.VehicleType)
+                .FirstOrDefaultAsync(vp => vp.Id == id.Value);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View(order);
+        }
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
