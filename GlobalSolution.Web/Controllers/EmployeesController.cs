@@ -346,8 +346,8 @@ namespace GlobalSolution.Web.Controllers
         }
 
 
-
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddVehicle(VehicleViewModel model)
         {
 
@@ -366,9 +366,7 @@ namespace GlobalSolution.Web.Controllers
 
 
 
-        ////////////////////////////////////////////////////
-
-
+        //////////////////////////////////////////////////////////
         public async Task<IActionResult> EditOrder(int? id)
         {
             if (id == null)
@@ -387,11 +385,9 @@ namespace GlobalSolution.Web.Controllers
                 return NotFound();
             }
 
-         
+
             return View(_converterHelper.ToOrderViewModel(order));
         }
-
-
 
         [HttpPost]
         public async Task<IActionResult> EditOrder(OrderViewModel model)
@@ -401,23 +397,11 @@ namespace GlobalSolution.Web.Controllers
                 var order = await _converterHelper.ToOrderAsync(model, false);
                 _dataContext.Orders.Update(order);
                 await _dataContext.SaveChangesAsync();
-                return RedirectToAction(($"{nameof(DetailsVehicle)}/{model.VehicleId}"));
+                return RedirectToAction(($"DetailsVehicle/{model.VehicleId}"));
             }
             return View(model);
         }
-
-
-
-
-
-
-
-
-        ///////////////////////////////////////////////////
-
-
-
-
+        ///////////////////////////////////////////////////////////////////////////////////
         public async Task<IActionResult> AddOrder(int? id)
         {
             if (id == null)
@@ -426,7 +410,7 @@ namespace GlobalSolution.Web.Controllers
             }
 
             var vehicle = await _dataContext.Vehicles
-                .Include(e => e.Employee)
+                .Include(v => v.Employee)
                 .FirstOrDefaultAsync(v => v.Id == id.Value);
             if (vehicle == null)
             {
@@ -439,13 +423,11 @@ namespace GlobalSolution.Web.Controllers
                 VehicleId = vehicle.Id,
                 Customers = _comboHelper.GetComboCustomers(),
                 JobTypes = _comboHelper.GetComboJobTypes(),
-                Price = vehicle.Price,
 
             };
 
             return View(model);
         }
-
 
 
         [HttpPost]
@@ -456,140 +438,14 @@ namespace GlobalSolution.Web.Controllers
                 var order = await _converterHelper.ToOrderAsync(model, true);
                 _dataContext.Orders.Add(order);
                 await _dataContext.SaveChangesAsync();
-                return RedirectToAction(($"{nameof(DetailsVehicle)}/{model.VehicleId}"));
+                return RedirectToAction(($"DetailsVehicle/{model.VehicleId}"));
             }
+            model.Customers = _comboHelper.GetComboCustomers();
+            model.Customers = _comboHelper.GetComboJobTypes();
             return View(model);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //////////////////////////////////////////////////////////////////////////
-
-        // GET: Employees/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var employee = await _dataContext.Employees
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            return View(employee);
-        }
-
-
-
-
-
-
-
-        // POST: Employees/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var employee = await _dataContext.Employees.FindAsync(id);
-            _dataContext.Employees.Remove(employee);
-            await _dataContext.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool EmployeeExists(int id)
-        {
-            return _dataContext.Employees.Any(e => e.Id == id);
-        }
-
-
-
-
-
-     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        ///////////////////////////////////////////////////////////////////////
 
 
 

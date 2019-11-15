@@ -16,15 +16,6 @@ namespace GlobalSolution.Web.Helpers
         }
 
 
-
-
-
-
-
-
-
-
-
         public IEnumerable<SelectListItem> GetComboVehicleTypes()
         {
 
@@ -46,23 +37,6 @@ namespace GlobalSolution.Web.Helpers
             });
             return list;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         public IEnumerable<SelectListItem> GetComboCustomers()
         {
@@ -87,7 +61,7 @@ namespace GlobalSolution.Web.Helpers
 
         public IEnumerable<SelectListItem> GetComboJobTypes()
         {
-            var list = _dataContext.VehicleTypes.Select(j => new SelectListItem
+            var list = _dataContext.JobTypes.Select(j => new SelectListItem
             {
 
                 Text = j.Name,
@@ -106,17 +80,6 @@ namespace GlobalSolution.Web.Helpers
             return list;
         }
 
-
-
-
-
-
-
-
-
-
-
-        
     }
 }
 

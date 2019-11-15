@@ -1,72 +1,74 @@
-﻿
-
-    @model GlobalSolution.Web.Models.OrderViewModel
+﻿@model GlobalSolution.Web.Models.OrderViewModel
 
 
 
-    @{
-        ViewData["Title"] = "AddOrder";
-    }
+@{
+    ViewData["Title"] = "Create";
+}
 
-    <center>
-        <h2>Create Order</h2>
-    </center>
-
-
-    <div class="row">
-        <div class="col-md-4">
-            <form asp-action="AddOrder">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="EmployeeId" />
-                <input type="hidden" asp-for="VehicleId" />
-                <div class="form-group">
-                    <label asp-for="CustomerId" class="control-label"></label>
-                    <select asp-for="CustomerId" asp-items="Model.Customers" class="form-control"></select>
-                    <span asp-validation-for="CustomerId" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="JobTypeId" class="control-label"></label>
-                    <select asp-for="JobTypeId" asp-items="Model.JobTypes" class="form-control"></select>
-                    <span asp-validation-for="JobTypeId" class="text-danger"></span>
-                </div>
+<center>
+    <h2>Create Order</h2>
+</center>
 
 
-                <div class="form-group">
-                    <label asp-for="Garantia" class="control-label"></label>
-                    <input asp-for="Garantia" class="form-control" />
-                    <span asp-validation-for="Garantia" class="text-danger"></span>
-                </div>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddOrder">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="EmployeeId" />
+            <input type="hidden" asp-for="VehicleId" />
+            <div class="form-group">
+                <label asp-for="CustomerId" class="control-label"></label>
+                <select asp-for="CustomerId" asp-items="Model.Customers" class="form-control"></select>
+                <span asp-validation-for="CustomerId" class="text-danger"></span>
+            </div>
 
-                <div class="form-group">
-                    <label asp-for="Trabajo" class="control-label"></label>
-                    <input asp-for="Trabajo" class="form-control" />
-                    <span asp-validation-for="Trabajo" class="text-danger"></span>
-                </div>
+            <div class="form-group">
+                <label asp-for="JobTypeId" class="control-label"></label>
+                <select asp-for="JobTypeId" asp-items="Model.JobTypes" class="form-control"></select>
+                <span asp-validation-for="JobTypeId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
 
 
-                <div class="form-group">
-                    <label asp-for="Price" class="control-label"></label>
-                    <input asp-for="Price" class="form-control" />
-                    <span asp-validation-for="Price" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Description" class="control-label"></label>
-                    <textarea asp-for="Description" class="form-control"></textarea>
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="EntryDate1" class="control-label"></label>
-                    <input asp-for="EntryDate1" class="form-control" />
-                    <span asp-validation-for="EntryDate1" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-success" />
-                    <a asp-action="Details" asp-route-id="@Model.VehicleId" class="btn btn-success">Back Vehicle</a>
-                </div>
-            </form>
-        </div>
+            <div class="form-group">
+                <label asp-for="Garantia" class="control-label"></label>
+                <input asp-for="Garantia" class="form-control" />
+                <span asp-validation-for="Garantia" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Trabajo" class="control-label"></label>
+                <input asp-for="Trabajo" class="form-control" />
+                <span asp-validation-for="Trabajo" class="text-danger"></span>
+            </div>
+
+
+
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EntryDate1" class="control-label"></label>
+                <input asp-for="EntryDate1" class="form-control" />
+                <span asp-validation-for="EntryDate1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-success" />
+                <a asp-action="DetailsVehicle" asp-route-id="@Model.VehicleId" class="btn btn-success">Back Vehicle</a>
+            </div>
+        </form>
     </div>
+</div>
+
 
 
 

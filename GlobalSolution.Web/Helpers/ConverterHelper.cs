@@ -25,7 +25,7 @@ namespace GlobalSolution.Web.Helpers
         {
             return new Order
             {
-
+                Id = isNew ? 0 : model.Id,
                 Employee = await _dataContext.Employees.FindAsync(model.EmployeeId),
                 Customer = await _dataContext.Customers.FindAsync(model.CustomerId),
                 JobType = await _dataContext.JobTypes.FindAsync(model.JobTypeId),
@@ -35,7 +35,8 @@ namespace GlobalSolution.Web.Helpers
                 Price = model.Price,
                 EntryDate1 = model.EntryDate1.ToUniversalTime(),
                 Description = model.Description,
-                Id = isNew ? 0 : model.Id,
+
+
             };
 
         }
@@ -51,16 +52,21 @@ namespace GlobalSolution.Web.Helpers
                 Garantia = order.Garantia,
                 Trabajo = order.Trabajo,
                 Price = order.Price,
-                EntryDate1 = order.EntryDate1Local,
+                EntryDate1 = order.EntryDate1,
                 Description = order.Description,
-                Id =  order.Id,
+                Id = order.Id,
                 CustomerId = order.Customer.Id,
                 Customers = _comboHelper.GetComboCustomers(),
+                JobTypes = _comboHelper.GetComboJobTypes(),
                 EmployeeId = order.Employee.Id,
                 VehicleId = order.Vehicle.Id,
                 JobTypeId = order.JobType.Id
             };
         }
+
+
+
+
 
 
 

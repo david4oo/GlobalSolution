@@ -139,8 +139,8 @@ namespace GlobalSolution.Web.Data
         {
             if (!_context.JobTypes.Any())
             {
-                _context.JobTypes.Add(new JobType { Name = "Electrico" });
                 _context.JobTypes.Add(new JobType { Name = "Mecanico" });
+                _context.JobTypes.Add(new JobType { Name = "Electrico" });
                 _context.JobTypes.Add(new JobType { Name = "Pintura" });
                 _context.JobTypes.Add(new JobType { Name = "Limpieza" });
                 _context.JobTypes.Add(new JobType { Name = "Latoneria" });
@@ -148,14 +148,14 @@ namespace GlobalSolution.Web.Data
 
             }
         }
-
+        
 
         private async Task CheckVehiclesTypesAsync()
         {
             if (!_context.VehicleTypes.Any())
             {
-                _context.VehicleTypes.Add(new VehicleType { Name = "Motocicleta" });
                 _context.VehicleTypes.Add(new VehicleType { Name = "Automovil" });
+                _context.VehicleTypes.Add(new VehicleType { Name = "Motocicleta" });
                 _context.VehicleTypes.Add(new VehicleType { Name = "Camion" });
                 _context.VehicleTypes.Add(new VehicleType { Name = "Bus" });
                 _context.VehicleTypes.Add(new VehicleType { Name = "Camioneta" });
@@ -163,7 +163,6 @@ namespace GlobalSolution.Web.Data
 
             }
         }
-
 
 
 
@@ -231,24 +230,49 @@ namespace GlobalSolution.Web.Data
         }
 
 
+        /*private async Task CheckOrderAsync()
+        {
+            var employee = _context.Employees.FirstOrDefault();
+            var customer = _context.Customers.FirstOrDefault();
+            var vehicle = _context.Vehicles.FirstOrDefault();
+            var jobtype = _context.JobTypes.FirstOrDefault();
 
 
+            if (!_context.Orders.Any())
+            {
 
+                AddOrder(employee, customer, jobtype, vehicle, "5 meses", "15 dias", 800000M,
+                    "El vehiculo presenta un problema del arbol de leva y fuselaje del motor", DateTime.Today);
+                await _context.SaveChangesAsync();
+            }
 
+        }
 
+        private void AddOrder(
+        Employee employee,
+        Customer customer,
+        JobType jobtype,
+        Vehicle vehicle,
+        string garantia,
+        string trabajo,
+        decimal price,
+        string descripcion,
+        DateTime entrydate1)
+        {
+            _context.Orders.Add(new Order
+            {
+                Employee = employee,
+                Customer = customer,
+                JobType = jobtype,
+                Vehicle = vehicle,
+                Garantia = garantia,
+                Trabajo = trabajo,
+                Price = price,
+                Description = descripcion,
+                EntryDate1 = entrydate1,
 
-
-
-
-
-
-
-
-
-
-
-
-
+            });
+        }*/
 
     }
 }
