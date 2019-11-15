@@ -27,29 +27,15 @@ namespace GlobalSolution.Web.Data
             var manager = await CheckUserAsync("1128462788", "Walter", "Araujo", "walter-4029@hotmail.com", "3166699037", "Calle 69 #40-29", "Manager");
             var employee = await CheckUserAsync("1128462799", "Wally", "Muñoz", "waraujo095@gmail.com", "3168440133", "Av Poblado", "Employee");
             var customer1 = await CheckUserAsync("1128462777", "David", "Lopez", "david.4029@hotmail.com", "3122127180", "Calle 110a #30-24", "Customer");
-
-
-
             await CheckManagerAsync(manager);
             await CheckEmployeesAsync(employee);
             await CheckCustomersAsync(customer1);
-
-
-
-
             await CheckJobsTypesAsync();
             await CheckVehiclesTypesAsync();
-
-
-
             await CheckVehiclesAsync();
             await CheckOrderAsync();
 
-
-
-
-
-            }
+        }
 
 
 
@@ -148,7 +134,7 @@ namespace GlobalSolution.Web.Data
 
             }
         }
-        
+
 
         private async Task CheckVehiclesTypesAsync()
         {
@@ -206,7 +192,7 @@ namespace GlobalSolution.Web.Data
 
         private async Task CheckOrderAsync()
         {
-            var employee= _context.Employees.FirstOrDefault();
+            var employee = _context.Employees.FirstOrDefault();
             var customer = _context.Customers.FirstOrDefault();
             var vehicle = _context.Vehicles.FirstOrDefault();
             var jobtype = _context.JobTypes.FirstOrDefault();
@@ -219,15 +205,27 @@ namespace GlobalSolution.Web.Data
                     Employee = employee,
                     Price = 800000M,
                     Vehicle = vehicle,
-                    JobType  = jobtype,
+                    JobType = jobtype,
                     Trabajo = "15 Dias",
-                    Garantia = "5 meses",                
+                    Garantia = "5 meses",
                     Description = "Fuselaje Mayor Dañado"
                 });
 
                 await _context.SaveChangesAsync();
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         /*private async Task CheckOrderAsync()
