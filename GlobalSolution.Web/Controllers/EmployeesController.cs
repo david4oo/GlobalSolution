@@ -316,12 +316,6 @@ namespace GlobalSolution.Web.Controllers
         }
 
 
-
-
-
-
-
-
         ///AGREGAR VEHICULO
         public async Task<IActionResult> AddVehicle(int? id)
         {
@@ -523,6 +517,67 @@ namespace GlobalSolution.Web.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////
 
 
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var employee = await _dataContext.Employees
+                .Include(e => e.User)
+                .Include(e => e.Vehicles)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            if(employee.Vehicles.Count != 0)
+            {
+
+                ModelState.AddModelError(string.Empty, "Employee Can't be delete because it has vehicles");
+                return RedirectToAction(nameof(Index));
+            }
+
+
+
+            _dataContext.Employees.Remove(employee);
+            await _dataContext.SaveChangesAsync();
+            await _userHelper.DeleteUserAsync(employee.User.Email);
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////7
+        public async Task<IActionResult> DeleteVehicle(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vehicle = await _dataContext.Vehicles
+                .Include(v => v.Employee)
+                 .Include(v => v.VehiclePhotos)
+                  .Include(v => v.Orders)
+                .FirstOrDefaultAsync(pi => pi.Id == id.Value);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            if (vehicle.VehiclePhotos.Count != 0 || vehicle.Orders.Count != 0)
+            {
+
+                ModelState.AddModelError(string.Empty, "Vehicle Can't be delete because it has vehiclesPhotos or Orders ");
+                return RedirectToAction($"{nameof(Details)}/{vehicle.Employee.Id}");
+            }
+
+            _dataContext.Vehicles.Remove(vehicle);
+            await _dataContext.SaveChangesAsync();
+            return RedirectToAction($"{nameof(Details)}/{vehicle.Employee.Id}");
+        }
 
 
 
