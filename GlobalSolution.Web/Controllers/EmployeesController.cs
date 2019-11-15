@@ -479,9 +479,48 @@ namespace GlobalSolution.Web.Controllers
         ////////////////////////////////////////////////////////////////////////
 
 
+        public async Task<IActionResult> DeleteImage(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vehiclePhoto = await _dataContext.VehiclePhotos
+                .Include(vp => vp.Vehicle)
+                .FirstOrDefaultAsync(vp => vp.Id == id.Value);
+            if (vehiclePhoto == null)
+            {
+                return NotFound();
+            }
+
+            _dataContext.VehiclePhotos.Remove(vehiclePhoto);
+            await _dataContext.SaveChangesAsync();
+            return RedirectToAction($"{nameof(DetailsVehicle)}/{vehiclePhoto.Vehicle.Id}");
+        }
+
+        public async Task<IActionResult> DeleteContract(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var order = await _dataContext.Orders
+                .Include(o => o.Vehicle)
+                .FirstOrDefaultAsync(o => o.Id == id.Value);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            _dataContext.Orders.Remove(order);
+            await _dataContext.SaveChangesAsync();
+            return RedirectToAction($"{nameof(DetailsVehicle)}/{order.Vehicle.Id}");
+        }
 
 
-
+        ////////////////////////////////////////////////////////////////////////////////////////
 
 
 
