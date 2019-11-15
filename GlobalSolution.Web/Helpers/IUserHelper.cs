@@ -27,6 +27,10 @@ namespace GlobalSolution.Web.Helpers
         Task<bool> DeleteUserAsync(string email);
 
 
+        Task<User> AddUser(AddUserViewModel view, string role);
+
+
+
 
 
     }
