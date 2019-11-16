@@ -395,6 +395,10 @@ namespace GlobalSolution.Web.Controllers
             }
             return View(model);
         }
+
+
+
+
         ///////////////////////////////////////////////////////////////////////////////////
         public async Task<IActionResult> AddOrder(int? id)
         {

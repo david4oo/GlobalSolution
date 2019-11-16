@@ -8,7 +8,7 @@ namespace GlobalSolution.Web.Helpers
         IEnumerable<SelectListItem> GetComboVehicleTypes();
         IEnumerable<SelectListItem> GetComboCustomers();
         IEnumerable<SelectListItem> GetComboJobTypes();
-        IEnumerable<SelectListItem> GetComboRoles();
+
 
     }
 }

@@ -13,6 +13,10 @@
   <ItemGroup>
     <Folder Include="wwwroot\images\Vehicle\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GlobalSolution.Common\GlobalSolution.Common.csproj" />
+  </ItemGroup>
   
 
 
