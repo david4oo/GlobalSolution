@@ -1,6 +1,8 @@
 ﻿using GlobalSolution.Common.Models;
 using GlobalSolution.Web.Data;
 using GlobalSolution.Web.Data.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,6 +15,8 @@ namespace GlobalSolution.Web.Controllers.API
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class EmployeesController : ControllerBase
     {
         private readonly DataContext _dataContext;

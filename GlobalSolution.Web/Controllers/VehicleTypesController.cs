@@ -1,5 +1,6 @@
 ﻿using GlobalSolution.Web.Data;
 using GlobalSolution.Web.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace GlobalSolution.Web.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class VehicleTypesController : Controller
     {
         private readonly DataContext _context;

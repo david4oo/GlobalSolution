@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace GlobalSolution.Web
 {
@@ -40,7 +42,8 @@ namespace GlobalSolution.Web
                 cfg.Password.RequireLowercase = false;
                 cfg.Password.RequireNonAlphanumeric = false;
                 cfg.Password.RequireUppercase = false;
-            }).AddEntityFrameworkStores<DataContext>();
+            })
+                .AddEntityFrameworkStores<DataContext>();
 
 
 
@@ -49,6 +52,28 @@ namespace GlobalSolution.Web
             {
                 cfg.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+
+            services.AddAuthentication()
+            .AddCookie()
+            .AddJwtBearer(cfg =>
+            {
+               cfg.TokenValidationParameters = new TokenValidationParameters
+            {
+                  ValidIssuer = Configuration["Tokens:Issuer"],
+                  ValidAudience = Configuration["Tokens:Audience"],
+                  IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
+            };
+        });
+
+
+
+
+
+
+
+
+
 
             services.AddTransient<SeedDb>();
             services.AddScoped<IUserHelper, UserHelper>();
